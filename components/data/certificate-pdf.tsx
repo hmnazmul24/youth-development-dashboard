@@ -110,12 +110,13 @@ export const CreateCertificate = async (info: CertificateInfoType) => {
   const pdfBytes = await pdfDoc.save();
   const blob = new Blob([pdfBytes], { type: "application/pdf" });
 
-  if (typeof window !== "undefined") {
-    // Code that uses `document` or `window` goes here
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = `certificate_${info.fullName}.pdf`;
-    link.click();
-  }
+  // todo: uncomment
+  // if (typeof window !== "undefined") {
+  //   // Code that uses `document` or `window` goes here
+  //   const link = document.createElement("a");
+  //   link.href = URL.createObjectURL(blob);
+  //   link.download = `certificate_${info.fullName}.pdf`;
+  //   link.click();
+  // }
   // Make sure `document` is available
 };

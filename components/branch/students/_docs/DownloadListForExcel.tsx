@@ -67,14 +67,16 @@ export default function DownloadListForExcel({
       type: "array",
     });
 
-    const blob = new Blob([excelBuffer], { type: "application/octet-stream" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.setAttribute("download", "students.xlsx"); // Set the file name
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    // todo: uncomment
+
+    // const blob = new Blob([excelBuffer], { type: "application/octet-stream" });
+    // const url = URL.createObjectURL(blob);
+    // const link = document.createElement("a");
+    // link.href = url;
+    // link.setAttribute("download", "students.xlsx"); // Set the file name
+    // document.body.appendChild(link);
+    // link.click();
+    // document.body.removeChild(link);
   };
 
   // Only render the button after the client-side is loaded
