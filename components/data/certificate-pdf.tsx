@@ -1,9 +1,10 @@
-import { useEffect } from "react";
+"use client";
+
 import { CertificateInfoType } from "@/types";
 import { format } from "date-fns";
 import { PDFDocument, rgb, StandardFonts } from "pdf-lib";
 
-export async function createCertificate(info: CertificateInfoType) {
+export const CreateCertificate = async (info: CertificateInfoType) => {
   // Load the background PDF
   const backgroundPdfBytes = await fetch("/certificate/certificate2.pdf").then(
     (res) => res.arrayBuffer()
@@ -84,7 +85,7 @@ export async function createCertificate(info: CertificateInfoType) {
     color: rgb(0, 0, 0),
   });
   doc.drawText(info.branchCode, {
-    x: 670,
+    x: 680,
     y: 209,
     size: 13,
     font: customFont,
@@ -109,14 +110,9 @@ export async function createCertificate(info: CertificateInfoType) {
   const pdfBytes = await pdfDoc.save();
   const blob = new Blob([pdfBytes], { type: "application/pdf" });
 
-  // Trigger download in the browser (useEffect ensures it's client-side)
-  useEffect(() => {
-    // Make sure `document` is available
-    if (typeof document !== "undefined") {
-      const link = document.createElement("a");
-      link.href = URL.createObjectURL(blob);
-      link.download = `certificate_${info.fullName}.pdf`;
-      link.click();
-    }
-  }, []); // This will run only on the client
-}
+  // Make sure `document` is available
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = `certificate_${info.fullName}.pdf`;
+  link.click();
+};

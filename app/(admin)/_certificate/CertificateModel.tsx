@@ -10,7 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useMutation } from "@tanstack/react-query";
 import { ReactNode, useState, useEffect } from "react";
-import { createCertificate } from "@/components/data/certificate-pdf";
+import { CreateCertificate } from "@/components/data/certificate-pdf";
 import { Download } from "lucide-react";
 
 const RegistrationCardModal = ({
@@ -80,7 +80,7 @@ const RegistrationCardModal = ({
                   disabled={downloading}
                   onClick={async () => {
                     setDownloading(true);
-                    await createCertificate(data.info!);
+                    await CreateCertificate(data.info!);
                     setDownloading(false);
                   }}
                   className="bg-emerald-500 flex items-center gap-2 hover:bg-emerald-600"
