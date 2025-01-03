@@ -1,7 +1,7 @@
 "use client";
 
 import { StudentPaidType } from "@/components/data/tableHelper";
-import { ReactNode } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import * as XLSX from "xlsx";
 
 // Define the type for your student data
@@ -16,18 +16,15 @@ type StudentData = {
 };
 
 const modifyData = (info: StudentPaidType[]): StudentData[] => {
-  let newData: StudentData[] = info.map((item) => ({
+  return info.map((item) => ({
     Name: item.name,
     Roll: item.genRoll!,
-
     Registration: item.genReg!,
     Mobile: item.mobile,
-
     Trade: item.trade!,
     Session: item.range!,
     Result: item.result ?? "",
   }));
-  return newData;
 };
 
 export default function DownloadListForExcel({
@@ -37,6 +34,14 @@ export default function DownloadListForExcel({
   children: ReactNode;
   studentInfo: StudentPaidType[];
 }) {
+  // State to track client-side rendering
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    // This will only run on the client side
+    setIsClient(true);
+  }, []);
+
   // Example data
   const studentData: StudentData[] = modifyData(studentInfo);
 
@@ -71,6 +76,11 @@ export default function DownloadListForExcel({
     link.click();
     document.body.removeChild(link);
   };
+
+  // Only render the button after the client-side is loaded
+  if (!isClient) {
+    return null;
+  }
 
   return <div onClick={handleDownloadExcel}>{children}</div>;
 }

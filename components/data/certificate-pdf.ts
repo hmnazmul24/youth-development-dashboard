@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { CertificateInfoType } from "@/types";
 import { format } from "date-fns";
 import { PDFDocument, rgb, StandardFonts } from "pdf-lib";
@@ -12,29 +13,27 @@ export async function createCertificate(info: CertificateInfoType) {
   const pdfDoc = await PDFDocument.load(backgroundPdfBytes);
 
   // Load the custom font (italic)
-  // const fontBytes = await fetchFont("/fonts/custom.ttf"); // Replace with the path to your italic font file
   const customFont = await pdfDoc.embedFont(StandardFonts.TimesRomanBold);
 
   // Access the first page of the PDF
   const pages = pdfDoc.getPages();
   const doc = pages[0]; // Assuming the first page is the background
 
-  // Draw your custom content with the italic font
+  // Draw custom content on the certificate
   doc.drawText(info.SLNo, {
     x: 260,
     y: 512,
     size: 14,
-    font: customFont, // Use the custom italic font
+    font: customFont,
     color: rgb(0, 0, 0),
   });
   doc.drawText(info.roll, {
     x: 635,
     y: 355,
     size: 14,
-    font: customFont, // Use the custom italic font
+    font: customFont,
     color: rgb(0, 0, 0),
   });
-
   doc.drawText(info.reg, {
     x: 635,
     y: 335,
@@ -110,9 +109,14 @@ export async function createCertificate(info: CertificateInfoType) {
   const pdfBytes = await pdfDoc.save();
   const blob = new Blob([pdfBytes], { type: "application/pdf" });
 
-  // Trigger a download
-  const link = document.createElement("a");
-  link.href = URL.createObjectURL(blob);
-  link.download = `certificate_${info.fullName}.pdf`;
-  link.click();
+  // Trigger download in the browser (useEffect ensures it's client-side)
+  useEffect(() => {
+    // Make sure `document` is available
+    if (typeof document !== "undefined") {
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = `certificate_${info.fullName}.pdf`;
+      link.click();
+    }
+  }, []); // This will run only on the client
 }
